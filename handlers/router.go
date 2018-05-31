@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"github.com/aes-encryption/middleware"
 	"github.com/sirupsen/logrus"
-	"os"
 )
 
 
@@ -19,6 +18,8 @@ type ApiResponse struct {
 func Run(config *middleware.Config) {
 	route := httprouter.New()
 	addr := fmt.Sprintf(":%d", config.Encrypter.Port)
+	route.POST("/store", StoreDataHandler)
+	route.GET("/get", GetDataHandler)
 	fmt.Printf("Listenning to port %s \n", addr)
 	logrus.Fatal(http.ListenAndServe(addr, middleware.ConfigMiddleWare(route, config)))
 }
@@ -37,8 +38,4 @@ func createResponse(detail, title string, status int) *ApiResponse {
 		Detail: detail,
 		Title:  title,
 	}
-}
-func GetLocalImageURL(config *middleware.Config, filename, fileType string) string{
-	hostName, _ := os.Hostname()
-	return fmt.Sprintf("Image URL: http://%s:%d/%s.%s",hostName, config.Encrypter.Port, filename, fileType)
 }

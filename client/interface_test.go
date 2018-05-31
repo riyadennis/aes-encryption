@@ -3,6 +3,9 @@ package client
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
+
+	_ "github.com/go-sql-driver/mysql"
+	"fmt"
 )
 
 func TestRandSeq(t *testing.T) {
@@ -30,4 +33,21 @@ func TestDecrypt(t *testing.T) {
 	decryptedText, err  := Decrypt(encryptedText, []byte(key))
 	assert.NoError(t, err)
 	assert.Equal(t, string(decryptedText), textToEncrypt)
+}
+func TestStore(t *testing.T) {
+	id := []byte(RandSeq(16))
+	payLoad := []byte("plain text")
+	key, err := Store(id, payLoad)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, key)
+}
+func TestRetrieve(t *testing.T) {
+	id := []byte("ssXVlBzgbaiCMRAjWw$$")
+	payLoad := []byte("plain text")
+	key, err := Store(id, payLoad)
+	assert.NoError(t, err)
+	decrypted, err := Retrieve(id, key)
+	assert.NoError(t, err)
+	assert.Equal(t, string(decrypted), "plain text")
+	fmt.Println(string(decrypted))
 }
