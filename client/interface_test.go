@@ -4,50 +4,84 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/go-sql-driver/mysql"
-	"fmt"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/aes-encryption/middleware"
+	"github.com/aes-encryption/models"
+	"os"
+)
+
+const (
+	tableName = "encrypted_data"
+	source    = "encrypted_db"
 )
 
 func TestRandSeq(t *testing.T) {
 	size := 16
-	key := RandSeq(size)
+	key := randSeq(size)
 	assert.Equal(t, 16, len(key))
 
 	size1 := 12
-	key1 := RandSeq(size1)
+	key1 := randSeq(size1)
 	assert.Equal(t, 12, len(key1))
 }
 func TestEncrypt(t *testing.T) {
-	key := RandSeq(16)
+	key := randSeq(16)
 	textToEncrypt := "Plain text"
-	encryptedText, err := Encrypt(textToEncrypt, key)
+	encryptedText, err := encrypt(textToEncrypt, key)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, encryptedText)
 }
 
 func TestDecrypt(t *testing.T) {
-	key := RandSeq(16)
+	key := randSeq(16)
 	textToEncrypt := "Plain text"
-	encryptedText, err := Encrypt(textToEncrypt, key)
+	encryptedText, err := encrypt(textToEncrypt, key)
 	assert.NoError(t, err)
-	decryptedText, err  := Decrypt(encryptedText, []byte(key))
+	decryptedText, err := decrypt(encryptedText, []byte(key))
 	assert.NoError(t, err)
 	assert.Equal(t, string(decryptedText), textToEncrypt)
 }
 func TestStore(t *testing.T) {
-	id := []byte(RandSeq(16))
+	id := []byte(randSeq(16))
 	payLoad := []byte("plain text")
-	key, err := Store(id, payLoad)
+	config := CreateConfig()
+	setupDB(config)
+	defer tearDown()
+	ac := AesClient{Config: config}
+	key, err := ac.Store(id, payLoad, )
+	defer tearDown()
 	assert.NoError(t, err)
 	assert.NotEmpty(t, key)
 }
 func TestRetrieve(t *testing.T) {
 	id := []byte("ssXVlBzgbaiCMRAjWw$$")
 	payLoad := []byte("plain text")
-	key, err := Store(id, payLoad)
+	setupDB(CreateConfig())
+	config := CreateConfig()
+	defer tearDown()
+	ac := AesClient{Config: config}
+	key, err := ac.Store(id, payLoad)
+	defer tearDown()
 	assert.NoError(t, err)
-	decrypted, err := Retrieve(id, key)
+	decrypted, err := ac.Retrieve(id, key)
 	assert.NoError(t, err)
 	assert.Equal(t, string(decrypted), "plain text")
-	fmt.Println(string(decrypted))
+}
+func CreateConfig() *middleware.Config {
+	db := middleware.Db{Type: "sqlite3", Source: source, User: "root", Password: ""}
+	encrypter := middleware.Encryptor{Port: 8083, Db: db}
+	return &middleware.Config{
+		Encrypter: encrypter,
+	}
+}
+func tearDown() {
+	os.Remove(source)
+}
+func setupDB(config *middleware.Config) {
+	CreateTable(config.Encrypter.Db)
+}
+func CreateTable(db middleware.Db) {
+	dbConnec, _ := models.InitDB(db)
+	statement, _ := dbConnec.Prepare("CREATE TABLE IF NOT EXISTS " + tableName + "(id varchar(100) NOT NULL PRIMARY KEY,encrypted_text  BLOB,encryption_key varchar(100), InsertedDatetime DATETIME);")
+	statement.Exec()
 }

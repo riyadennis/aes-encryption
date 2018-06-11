@@ -35,6 +35,7 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	key, err := client.Store([]byte(i.Id), []byte(i.Data), config)
+	ac := client.AesClient{Config: config}
+	key, err := ac.Store([]byte(i.Id), []byte(i.Data))
 	w.Write([]byte(key))
 }

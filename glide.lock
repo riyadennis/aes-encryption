@@ -1,5 +1,5 @@
-hash: 06710acefd6a21a4c96c2022bbcb7efca1cf1f162b94a8bfcd5237b7b85f859b
-updated: 2018-05-31T14:43:46.195186185+01:00
+hash: a591ab1efd8367b3332a6a4bb33435a8b24509fbe3de3bc96c7ad33431e55bae
+updated: 2018-06-11T11:56:56.944358087+01:00
 imports:
 - name: github.com/go-sql-driver/mysql
   version: 7413002f368fba928eefaf762c91a2acfeabdf68
@@ -9,8 +9,11 @@ imports:
   - database
   - database/mysql
   - source
+  - source/file
 - name: github.com/julienschmidt/httprouter
   version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
+- name: github.com/mattn/go-sqlite3
+  version: 323a32be5a2421b8c7087225079c6c900ec397cd
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/sirupsen/logrus
@@ -40,6 +43,6 @@ testImports:
   subpackages:
   - difflib
 - name: github.com/stretchr/testify
-  version: 12b6f73e6084dad08a7c6e575284b177ecafbc71
+  version: f35b8ab0b5a2cef36673838d662e249dd9c94686
   subpackages:
   - assert

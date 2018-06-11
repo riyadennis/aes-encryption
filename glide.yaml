@@ -10,6 +10,8 @@ import:
   version: ^2.2.1
 - package: github.com/golang-migrate/migrate
   version: ^3.2.0
+- package: github.com/mattn/go-sqlite3
+  version: ^1.7.0
 testImport:
 - package: github.com/stretchr/testify
   version: ^1.2.1

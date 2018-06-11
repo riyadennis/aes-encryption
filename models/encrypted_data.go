@@ -14,6 +14,7 @@ type Data struct {
 
 func SavePayload(id, key string, payLoad []byte, confDb middleware.Db) (error) {
 	db, err := InitDB(confDb)
+	defer db.Close()
 	if err != nil {
 		logrus.Errorf("Unable to save payload %s", err.Error())
 		return err
@@ -41,8 +42,9 @@ func GetPayLoad(id string, confDb middleware.Db) (*Data, error) {
 	var encrypted_text string
 	var data Data
 	db, err := InitDB(confDb)
+	defer db.Close()
 	if err != nil {
-		logrus.Errorf("Unable to get image details %s", err.Error())
+		logrus.Errorf("Unable to get data from db %s", err.Error())
 		return nil, err
 	}
 	query := "SELECT encrypted_text from " + tableName + " where id = '" + id + "'"
@@ -52,7 +54,6 @@ func GetPayLoad(id string, confDb middleware.Db) (*Data, error) {
 		logrus.Errorf("Unable to get image details %s", err.Error())
 		return nil, err
 	}
-
 	data.EncryptedText = encrypted_text
 	return &data, nil
 }
