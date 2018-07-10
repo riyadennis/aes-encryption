@@ -16,6 +16,7 @@ type Input struct {
 }
 
 func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	var response *ApiResponse
 	if req.Body == nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
@@ -40,7 +41,10 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 	key, err := ac.Store([]byte(i.Id), []byte(i.Data))
 	if err != nil {
 		msg := fmt.Sprintf("Unable to store the data got error %s", err.Error())
-		w.Write([]byte(msg))
+		response = createResponse(msg, "Error", http.StatusBadRequest)
+		jsonResponseDecorator(response, w)
+		return
 	}
-	w.Write([]byte(key))
+	response = createResponse(string(key), "Success", http.StatusOK)
+	jsonResponseDecorator(response, w)
 }
