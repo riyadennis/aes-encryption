@@ -20,9 +20,8 @@ func TestRandSeq(t *testing.T) {
 	key := randSeq(size)
 	assert.Equal(t, 16, len(key))
 
-	size1 := 12
-	key1 := randSeq(size1)
-	assert.Equal(t, 12, len(key1))
+	key1 := randSeq(16)
+	assert.Equal(t, 16, len(key1))
 }
 func TestEncrypt(t *testing.T) {
 	key := randSeq(16)
