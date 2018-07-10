@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/aes-encryption/client"
 	"github.com/aes-encryption/middleware"
+	"fmt"
 )
 
 type Input struct {
@@ -37,5 +38,9 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 	}
 	ac := client.AesClient{Config: config}
 	key, err := ac.Store([]byte(i.Id), []byte(i.Data))
+	if err != nil {
+		msg := fmt.Sprintf("Unable to store the data got error %s", err.Error())
+		w.Write([]byte(msg))
+	}
 	w.Write([]byte(key))
 }
