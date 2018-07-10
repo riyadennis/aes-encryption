@@ -46,6 +46,9 @@ func (ac AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
 		return nil, err
 	}
 	data, err := models.GetPayLoad(string(id), ac.Config.Encrypter.Db)
+	if err != nil {
+		return nil, err
+	}
 	decryptedText, err := decrypt([]byte(data.EncryptedText), aesKey)
 	if err != nil {
 		return nil, err

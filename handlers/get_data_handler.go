@@ -9,6 +9,7 @@ import (
 )
 
 func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	var response *ApiResponse
 	key := req.Header.Get("key")
 	id := req.Header.Get("id")
 	if key == "" || id == "" {
@@ -23,10 +24,11 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 	ac := client.AesClient{Config: config}
 	data, err := ac.Retrieve([]byte(id), []byte(key))
 	if err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
+		response = createResponse("Unable to retrieve data", "Error", http.StatusBadRequest)
+		jsonResponseDecorator(response, w)
 		return
 	}
 	cipherText := fmt.Sprintf("cipher_text: %s", string(data))
-	response := createResponse(cipherText, "Success", http.StatusOK)
+	response = createResponse(cipherText, "Success", http.StatusOK)
 	jsonResponseDecorator(response, w)
 }
