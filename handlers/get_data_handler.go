@@ -8,10 +8,10 @@ import (
 	"fmt"
 )
 
-func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
+func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	key := req.Header.Get("key")
 	id := req.Header.Get("id")
-	if key == ""{
+	if key == "" || id == "" {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
