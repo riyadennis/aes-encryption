@@ -1,0 +1,7 @@
+encrypter:
+  port: 8081
+  db:
+    source: "encrypted_db"
+    type: "mysql"
+    user: "root"
+    password: ""

@@ -1,10 +1,10 @@
-hash: a591ab1efd8367b3332a6a4bb33435a8b24509fbe3de3bc96c7ad33431e55bae
-updated: 2018-06-11T11:56:56.944358087+01:00
+hash: ee3c24eadda21083c35e99bb8d8e094cc83195c98d606ec803a133cf309bb03c
+updated: 2018-07-11T20:26:58.389537625+01:00
 imports:
 - name: github.com/go-sql-driver/mysql
   version: 7413002f368fba928eefaf762c91a2acfeabdf68
 - name: github.com/golang-migrate/migrate
-  version: 22f249514de9aa3f8a720a7cabbdd45d294f83a1
+  version: bcd996f3df28363f43e2d0935484c4559537a3eb
   subpackages:
   - database
   - database/mysql
@@ -13,7 +13,13 @@ imports:
 - name: github.com/julienschmidt/httprouter
   version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
 - name: github.com/mattn/go-sqlite3
-  version: 323a32be5a2421b8c7087225079c6c900ec397cd
+  version: 25ecb14adfc7543176f7d85291ec7dba82c6f7e4
+- name: github.com/onsi/ginkgo
+  version: fa5fabab2a1bfbd924faf4c067d07ae414e2aedf
+  subpackages:
+  - ginkgo
+- name: github.com/onsi/gomega
+  version: 62bff4df71bdbc266561a0caee19f0594b17c240
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/sirupsen/logrus
