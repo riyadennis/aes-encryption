@@ -8,7 +8,7 @@ import (
 	"strings"
 	"github.com/aes-encryption/middleware"
 	"github.com/aes-encryption/handlers"
-	"fmt"
+	"io/ioutil"
 )
 
 var _ = Describe("GetDataHandler", func() {
@@ -56,14 +56,16 @@ var _ = Describe("GetDataHandler", func() {
 		It("Should give me error", func() {
 			var b []byte
 			req, err := http.NewRequest("GET", "http://localhost:8081/get", nil)
-			req.Header.Add("key", "test key")
-			req.Header.Add("id", "test id")
+			req.Header.Add("key", "test_key")
+			req.Header.Add("id", "test_id")
 			client := http.Client{}
 			resp, err := client.Do(req)
+			resBody, err := ioutil.ReadAll(resp.Body)
+			defer resp.Body.Close()
 			Expect(err).To(BeNil())
 			resp.Body.Read(b)
-			fmt.Printf("%#v", string(b))
 			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
+			Expect(string(resBody)).To(Equal("Invalid request\n"))
 		})
 	})
 
