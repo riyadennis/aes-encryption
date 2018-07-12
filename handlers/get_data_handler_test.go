@@ -12,14 +12,12 @@ import (
 )
 
 var _ = Describe("GetDataHandler", func() {
-
 	BeforeSuite(func() {
 		config, err := middleware.GetConfig("../config_test.yaml")
 		Expect(err).To(BeNil())
 		go handlers.Run(config)
 
 	})
-
 	Context("get bad request for a post", func() {
 		It("Should give me a valid text", func() {
 			data := `{
@@ -53,7 +51,7 @@ var _ = Describe("GetDataHandler", func() {
 	})
 
 	Context("get status bad request for id and key that is not in db", func() {
-		It("Should give me error", func() {
+		FIt("Should give me error", func() {
 			var b []byte
 			req, err := http.NewRequest("GET", "http://localhost:8081/get", nil)
 			req.Header.Add("key", "test_key")
