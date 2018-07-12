@@ -51,8 +51,7 @@ var _ = Describe("GetDataHandler", func() {
 	})
 
 	Context("get status bad request for id and key that is not in db", func() {
-		FIt("Should give me error", func() {
-			var b []byte
+		It("Should give me error", func() {
 			req, err := http.NewRequest("GET", "http://localhost:8081/get", nil)
 			req.Header.Add("key", "test_key")
 			req.Header.Add("id", "test_id")
@@ -61,7 +60,6 @@ var _ = Describe("GetDataHandler", func() {
 			resBody, err := ioutil.ReadAll(resp.Body)
 			defer resp.Body.Close()
 			Expect(err).To(BeNil())
-			resp.Body.Read(b)
 			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
 			Expect(string(resBody)).To(Equal("Invalid request\n"))
 		})

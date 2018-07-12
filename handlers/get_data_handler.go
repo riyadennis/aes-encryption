@@ -8,6 +8,7 @@ import (
 	"fmt"
 )
 
+
 func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	var response *ApiResponse
 	key := req.Header.Get("key")
@@ -16,7 +17,9 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
+
 	config, err := middleware.GetConfigFromContext(req.Context())
+	fmt.Println(err)
 	if err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
