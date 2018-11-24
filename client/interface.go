@@ -3,12 +3,13 @@ package client
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"io"
 	"crypto/rand"
-	"github.com/pkg/errors"
+	"io"
 	mathRand "math/rand"
-	"github.com/aes-encryption/models"
+
 	"github.com/aes-encryption/middleware"
+	"github.com/aes-encryption/models"
+	"github.com/pkg/errors"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")

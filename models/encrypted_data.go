@@ -3,7 +3,6 @@ package models
 import (
 	"github.com/aes-encryption/middleware"
 	"github.com/sirupsen/logrus"
-	"fmt"
 )
 
 const tableName = "encrypted_data"
@@ -12,7 +11,7 @@ type Data struct {
 	EncryptedText string
 }
 
-func SavePayload(id, key string, payLoad []byte, confDb middleware.Db) (error) {
+func SavePayload(id, key string, payLoad []byte, confDb middleware.Db) error {
 	db, err := InitDB(confDb)
 	defer db.Close()
 	if err != nil {
@@ -25,13 +24,8 @@ func SavePayload(id, key string, payLoad []byte, confDb middleware.Db) (error) {
 		return err
 	}
 	res, err := query.Exec(id, payLoad, key, getCurrentTimeStamp())
-	if err != nil {
-		logrus.Errorf("Unable to save payload %s", err.Error())
-		return err
-	}
-	rowsAffected, _ := res.RowsAffected()
-	fmt.Println(rowsAffected)
-	if rowsAffected != 1 {
+	if err != nil ||
+		res.RowsAffected() == 0 {
 		logrus.Errorf("Unable to save payload %s", err.Error())
 		return err
 	}
