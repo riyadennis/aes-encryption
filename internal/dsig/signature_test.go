@@ -13,10 +13,9 @@ import (
 
 var (
 	expectedSha256 = `
-flTCqX40Lf4vdEhWcqdPrC4AS6KLEqOlaoscUAyxqzb
-1Hw8XmbsZF+BibhgXl1L+7kf0gevnQJ+MKDDfsazmW+
-NOMiNusOTai/uwe5OnoSjRUZXORFCvJEGmPXM7mkp64
-IFNxvoGzk6yq3fCrFcNHTP81cto27434reOU8LJsXo=`
+uq3RY9isrlVDrcUC979koHH/9+8LxCUOj3ukH3RVJsHsEYtJm+FA1JaWQSrVFhtb
+03fen4SY/w3AoHui56BMuW2OQpAXDjm637ooYcYLET0GTofOH5EbW/CU/OYdWMf/
+Vct4fPGq5oTekspkynYvGYXU/A5iYKmsVKCC/ZwRmNY=`
 	messageToSign = "data"
 )
 
@@ -30,6 +29,7 @@ func TestCreateSignatureWithHashSha256(t *testing.T) {
 		t.Errorf("failed :: %v", err)
 	}
 	encodedSv := base64.StdEncoding.EncodeToString([]byte(sig))
+	fmt.Printf("%v", encodedSv)
 	if encodedSv != clean(expectedSha256) {
 		t.Errorf("mismatch")
 	}
@@ -37,10 +37,9 @@ func TestCreateSignatureWithHashSha256(t *testing.T) {
 
 func TestCreateSignatureWithHashSha1(t *testing.T) {
 	expectedSha1 := `
-OSH1HartHf48R88LPod8BkB1atpJJrIAwrim0iO3Og+x
-QIiCI3xazErcRZjOrZnJRTUfRYPcyXMPx46f+CFD2O3P
-zyShTjwvCh5QwfRcOuvRmvlA5MfIG0nKxpBG71YSAujr
-7WHmzk8KyhQ5nHuMsDJ84l3PjQA6BuvzVXTOE5o= `
+xyPRuW0KXqLO47PGwMv1mflRDxMV7P+cnPHuNb4JaHajxus9B0U5Ai3wQ4SKWbXZoAe5
+XcblXhHCVgo1Jphnjb29zAocuDjj5PnokJ16l9UzJjaGRNtNYs9E6Rvn6DJE6nt0IESi
+Mg8yePSnoLlSyVlZEod3RvAfH9tn9sCkK94= `
 
 	key, err := ioutil.ReadFile("server.key")
 	if err != nil {
@@ -58,7 +57,7 @@ zyShTjwvCh5QwfRcOuvRmvlA5MfIG0nKxpBG71YSAujr
 
 func TestSignatureVerification(t *testing.T) {
 	hash := crypto.SHA1
-	key, err := ioutil.ReadFile("key.pem")
+	key, err := ioutil.ReadFile("server.key")
 	if err != nil {
 		t.Errorf("failed :: %v", err)
 	}
@@ -89,7 +88,7 @@ func TestSignatureVerification(t *testing.T) {
 	if !ok {
 		t.Errorf("certificate's public key is not RSA")
 	}
-	err = VerifySignature(publicKey, []byte("data to be signed"), []byte(sig), hash)
+	err = VerifySignature(publicKey, []byte(messageToSign), []byte(sig), hash)
 	if err != nil {
 		t.Errorf("failed :: %v", err)
 	}
