@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"fmt"
+
 	"github.com/julienschmidt/httprouter"
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/riyadennis/aes-encryption/ex/client"
@@ -46,9 +48,8 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 	if err != nil {
 		jsonResponseDecorator(
 			&api.DataResponse{
-				HttpStatus:    http.StatusInternalServerError,
-				EncryptionKey: err.Error(),
-				Status:        "Error",
+				HttpStatus: http.StatusInternalServerError,
+				Status:     fmt.Sprintf("%v", err),
 			}, w)
 		return
 	}
