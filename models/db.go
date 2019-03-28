@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"github.com/sirupsen/logrus"
-	"github.com/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/middleware"
 	"fmt"
 	"time"
 )

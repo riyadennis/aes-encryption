@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/middleware"
 	"github.com/sirupsen/logrus"
 )
 
@@ -23,9 +23,8 @@ func SavePayload(id, key string, payLoad []byte, confDb middleware.Db) error {
 		logrus.Errorf("Unable to save payload %s", err.Error())
 		return err
 	}
-	res, err := query.Exec(id, payLoad, key, getCurrentTimeStamp())
-	if err != nil ||
-		res.RowsAffected() == 0 {
+	_, err = query.Exec(id, payLoad, key, getCurrentTimeStamp())
+	if err != nil{
 		logrus.Errorf("Unable to save payload %s", err.Error())
 		return err
 	}

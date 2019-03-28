@@ -1,15 +1,15 @@
 package main
 import (
-	"github.com/aes-encryption/middleware"
-	"github.com/aes-encryption/handlers"
+	"github.com/riyadennis/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/handlers"
 	"flag"
-	"github.com/sirupsen/logrus"
-	"github.com/aes-encryption/cmd"
+	"github.com/riyadennis/aes-encryption/cmd"
 	"os"
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/golang-migrate/migrate/source/file"
+	"github.com/sirupsen/logrus"
 )
 func main(){
 	configFlag := flag.String("config", middleware.DefaultConfigPath, "Path to the config file")

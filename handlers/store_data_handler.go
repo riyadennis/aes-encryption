@@ -5,8 +5,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"io/ioutil"
 	"encoding/json"
-	"github.com/aes-encryption/client"
-	"github.com/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/client"
+	"github.com/riyadennis/aes-encryption/middleware"
 	"fmt"
 )
 

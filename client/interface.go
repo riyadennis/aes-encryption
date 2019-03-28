@@ -7,8 +7,8 @@ import (
 	"io"
 	mathRand "math/rand"
 
-	"github.com/aes-encryption/middleware"
-	"github.com/aes-encryption/models"
+	"github.com/riyadennis/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/models"
 	"github.com/pkg/errors"
 )
 
@@ -24,6 +24,7 @@ type Client interface {
 	// with the provided id
 	Retrieve(id, aesKey []byte) (payload []byte, err error)
 }
+
 type AesClient struct {
 	Config *middleware.Config
 }

@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 	"github.com/julienschmidt/httprouter"
-	"github.com/aes-encryption/middleware"
-	"github.com/aes-encryption/client"
+	"github.com/riyadennis/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/client"
 	"fmt"
 )
 
@@ -19,9 +19,8 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 	}
 
 	config, err := middleware.GetConfigFromContext(req.Context())
-	fmt.Println(err)
 	if err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
+		http.Error(w, "unable to fetch config :: %v", http.StatusBadRequest)
 		return
 	}
 	ac := client.AesClient{Config: config}

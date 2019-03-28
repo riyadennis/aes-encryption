@@ -6,8 +6,8 @@ import (
 
 	"net/http"
 	"strings"
-	"github.com/aes-encryption/middleware"
-	"github.com/aes-encryption/handlers"
+	"github.com/riyadennis/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/handlers"
 	"io/ioutil"
 )
 

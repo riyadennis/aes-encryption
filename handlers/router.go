@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
-	"github.com/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/middleware"
 	"github.com/sirupsen/logrus"
 )
 
