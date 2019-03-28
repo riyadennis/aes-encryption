@@ -1,8 +1,9 @@
-package middleware
+package internal
 
 import (
-	"testing"
 	"strings"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 

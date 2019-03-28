@@ -5,21 +5,21 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/riyadennis/aes-encryption/cmd"
-	"github.com/riyadennis/aes-encryption/handlers"
-	"github.com/riyadennis/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/internal"
+	"github.com/riyadennis/aes-encryption/internal/cmd"
+	"github.com/riyadennis/aes-encryption/internal/handlers"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/golang-migrate/migrate/source/file"
-	"github.com/riyadennis/aes-encryption/server"
+	"github.com/riyadennis/aes-encryption/internal/server"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	configFlag := flag.String("config", middleware.DefaultConfigPath, "Path to the config file")
+	configFlag := flag.String("config", internal.DefaultConfigPath, "Path to the config file")
 	migrateFlag := flag.String("migrate", "up", "To Create tables up to delete them down ")
 	flag.Parse()
-	config, err := middleware.GetConfig(*configFlag)
+	config, err := internal.GetConfig(*configFlag)
 	if err != nil {
 		logrus.Errorf("Unable to fetch config %s", err.Error())
 	}

@@ -1,7 +1,8 @@
-package handlers_test
+package handlers
 
 import (
 	"testing"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

@@ -9,8 +9,8 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/riyadennis/aes-encryption/ex/api"
-	"github.com/riyadennis/aes-encryption/middleware"
-	"github.com/riyadennis/aes-encryption/models"
+	"github.com/riyadennis/aes-encryption/internal"
+	"github.com/riyadennis/aes-encryption/internal/models"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -24,9 +24,7 @@ type Client interface {
 	Retrieve(id, aesKey []byte) (payload []byte, err error)
 }
 
-type AesClient struct {
-	Config *middleware.Config
-}
+type AesClient struct{}
 
 func (ac AesClient) DataRequest(payLoad, encryptionId string) *api.DataRequest {
 	return &api.DataRequest{
@@ -38,10 +36,11 @@ func (ac AesClient) DataRequest(payLoad, encryptionId string) *api.DataRequest {
 }
 
 func (ac AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
+	config, err := internal.GetConfig(internal.DefaultConfigPath)
 	if err != nil {
 		return nil, err
 	}
-	data, err := models.GetPayLoad(string(id), ac.Config.Encrypter.Db)
+	data, err := models.GetPayLoad(string(id), config.Encrypter.Db)
 	if err != nil {
 		return nil, err
 	}

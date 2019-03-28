@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/riyadennis/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/internal"
 	"github.com/sirupsen/logrus"
 )
 
@@ -11,7 +11,7 @@ type Data struct {
 	EncryptedText string
 }
 
-func SavePayload(id, key string, payLoad []byte, confDb middleware.Db) error {
+func SavePayload(id, key string, payLoad []byte, confDb internal.Db) error {
 	db, err := InitDB(confDb)
 	defer db.Close()
 	if err != nil {
@@ -24,14 +24,14 @@ func SavePayload(id, key string, payLoad []byte, confDb middleware.Db) error {
 		return err
 	}
 	_, err = query.Exec(id, payLoad, key, getCurrentTimeStamp())
-	if err != nil{
+	if err != nil {
 		logrus.Errorf("Unable to save payload %s", err.Error())
 		return err
 	}
 	return nil
 }
 
-func GetPayLoad(id string, confDb middleware.Db) (*Data, error) {
+func GetPayLoad(id string, confDb internal.Db) (*Data, error) {
 	var encrypted_text string
 	var data Data
 	db, err := InitDB(confDb)

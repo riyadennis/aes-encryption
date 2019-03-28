@@ -1,19 +1,20 @@
-package handlers_test
+package handlers
 
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"io/ioutil"
 	"net/http"
 	"strings"
-	"github.com/riyadennis/aes-encryption/middleware"
-	"github.com/riyadennis/aes-encryption/handlers"
-	"io/ioutil"
+
+	"github.com/riyadennis/aes-encryption/internal"
+	"github.com/riyadennis/aes-encryption/internal/handlers"
 )
 
 var _ = Describe("GetDataHandler", func() {
 	BeforeSuite(func() {
-		config, err := middleware.GetConfig("../config_test.yaml")
+		config, err := internal.GetConfig("../config_test.yaml")
 		Expect(err).To(BeNil())
 		go handlers.Run(config)
 

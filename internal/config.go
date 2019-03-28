@@ -1,17 +1,18 @@
-package middleware
+package internal
 
 import (
-	"os"
-	"io/ioutil"
-	"gopkg.in/yaml.v2"
-	"io"
-	"net/http"
 	"context"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 const (
 	DefaultConfigPath = "config.yaml"
-	ContextKey = "config"
+	ContextKey        = "config"
 )
 
 type ConfigReader interface {
@@ -22,8 +23,8 @@ type Config struct {
 	Encrypter Encryptor `yaml:"encrypter"`
 }
 type Encryptor struct {
-	Port     int      `yaml:"port"`
-	Db       Db
+	Port int `yaml:"port"`
+	Db   Db
 }
 type Db struct {
 	Source   string
@@ -49,7 +50,7 @@ func (fr Reader) Read(r io.Reader) (*Config, error) {
 
 	return &c, nil
 }
-func GetConfigFromContext(ctx context.Context) (*Config, error){
+func GetConfigFromContext(ctx context.Context) (*Config, error) {
 	config, ok := ctx.Value(ContextKey).(Config)
 
 	if !ok {
@@ -60,21 +61,19 @@ func GetConfigFromContext(ctx context.Context) (*Config, error){
 }
 func GetConfig(configPath string) (*Config, error) {
 	file, err := os.Open(configPath)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	fileReader := Reader{}
 	config, err := fileReader.Read(file)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	return config, err
 }
 func ConfigMiddleWare(next http.Handler, config *Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		newCtx := context.WithValue(r.Context(),ContextKey, config)
+		newCtx := context.WithValue(r.Context(), ContextKey, config)
 		next.ServeHTTP(w, r.WithContext(newCtx))
 	})
 }
-
-

@@ -12,8 +12,8 @@ import (
 	"net/http"
 
 	"github.com/riyadennis/aes-encryption/ex/api"
-	"github.com/riyadennis/aes-encryption/middleware"
-	"github.com/riyadennis/aes-encryption/models"
+	"github.com/riyadennis/aes-encryption/internal"
+	"github.com/riyadennis/aes-encryption/internal/models"
 	"google.golang.org/grpc"
 )
 
@@ -28,7 +28,7 @@ type AesServer struct {
 func (ae *AesServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataResponse, error) {
 	key := randSeq(16)
 	encryptedText, err := encrypt(dr.Data.ToEncrypt, dr.Data.EncryptionId)
-	cnf, err := middleware.GetConfig(middleware.DefaultConfigPath)
+	cnf, err := internal.GetConfig(internal.DefaultConfigPath)
 	if err != nil {
 		return nil, err
 	}

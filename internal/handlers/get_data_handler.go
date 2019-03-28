@@ -7,9 +7,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/riyadennis/aes-encryption/ex/client"
-	"github.com/riyadennis/aes-encryption/middleware"
 )
 
+// GetDataHandler handles rest call to fetch data from the db
 func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	key := req.Header.Get("key")
 	id := req.Header.Get("id")
@@ -17,13 +17,7 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
-
-	config, err := middleware.GetConfigFromContext(req.Context())
-	if err != nil {
-		http.Error(w, "unable to fetch config :: %v", http.StatusBadRequest)
-		return
-	}
-	ac := client.AesClient{Config: config}
+	ac := client.AesClient{}
 	data, err := ac.Retrieve([]byte(id), []byte(key))
 	if err != nil {
 		response := &api.DataResponse{HttpStatus: http.StatusInternalServerError}

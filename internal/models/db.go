@@ -2,13 +2,14 @@ package models
 
 import (
 	"database/sql"
-	"github.com/sirupsen/logrus"
-	"github.com/riyadennis/aes-encryption/middleware"
 	"fmt"
 	"time"
+
+	"github.com/riyadennis/aes-encryption/internal"
+	"github.com/sirupsen/logrus"
 )
 
-func InitDB(db middleware.Db) (*sql.DB, error) {
+func InitDB(db internal.Db) (*sql.DB, error) {
 	//for mysql
 	dbConnectionString := fmt.Sprintf("%s:%s@/%s?multiStatements=true", db.User, db.Password, db.Source)
 	if db.Type == "sqlite3" {

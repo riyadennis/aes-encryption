@@ -7,17 +7,18 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/riyadennis/aes-encryption/ex/api"
-	"github.com/riyadennis/aes-encryption/middleware"
+	"github.com/riyadennis/aes-encryption/internal"
 	"github.com/sirupsen/logrus"
 )
 
-func Run(config *middleware.Config) {
+// Run initialise handler
+func Run(config *internal.Config) {
 	route := httprouter.New()
 	addr := fmt.Sprintf(":%d", config.Encrypter.Port)
 	route.POST("/store", StoreDataHandler)
 	route.GET("/get", GetDataHandler)
 	fmt.Printf("Listenning to port %s \n", addr)
-	logrus.Fatal(http.ListenAndServe(addr, middleware.ConfigMiddleWare(route, config)))
+	logrus.Fatal(http.ListenAndServe(addr, internal.ConfigMiddleWare(route, config)))
 }
 
 func jsonResponseDecorator(response *api.DataResponse, w http.ResponseWriter) {

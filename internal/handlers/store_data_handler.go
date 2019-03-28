@@ -9,8 +9,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/riyadennis/aes-encryption/ex/client"
-	"github.com/riyadennis/aes-encryption/middleware"
-	"github.com/riyadennis/aes-encryption/server"
+	"github.com/riyadennis/aes-encryption/internal/server"
 )
 
 type Input struct {
@@ -34,12 +33,7 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	config, err := middleware.GetConfigFromContext(req.Context())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	ac := client.AesClient{Config: config}
+	ac := client.AesClient{}
 
 	re := ac.DataRequest(i.Data, i.Id)
 
