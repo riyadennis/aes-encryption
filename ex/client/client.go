@@ -7,17 +7,16 @@ import (
 	"io"
 	mathRand "math/rand"
 
+	"github.com/pkg/errors"
+	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/riyadennis/aes-encryption/middleware"
 	"github.com/riyadennis/aes-encryption/models"
-	"github.com/pkg/errors"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type Client interface {
-	// Store accepts an id and a payload in bytes and requests that the
-	// encryption-server stores them in its data store
-	Store(id, payload []byte) (aesKey []byte, err error)
+	Store(payLoad, encryptionId string) *api.DataRequest
 
 	// Retrieve accepts an id and an AES key, and requests that the
 	// encryption-server retrieves the original (decrypted) bytes stored
@@ -29,18 +28,13 @@ type AesClient struct {
 	Config *middleware.Config
 }
 
-func (ac AesClient) Store(id, payload []byte) (aesKey []byte, err error) {
-	if id == nil {
-		return nil, errors.New("Invalid input")
+func (ac AesClient) DataRequest(payLoad, encryptionId string) *api.DataRequest {
+	return &api.DataRequest{
+		Data: &api.Data{
+			ToEncrypt:    payLoad,
+			EncryptionId: encryptionId,
+		},
 	}
-
-	key := randSeq(16)
-	encryptedText, err := encrypt(string(payload), key)
-	err = models.SavePayload(string(id), key, encryptedText, ac.Config.Encrypter.Db)
-	if err != nil {
-		return nil, err
-	}
-	return []byte(key), nil
 }
 
 func (ac AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {

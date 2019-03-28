@@ -1,13 +1,16 @@
 package handlers
 
 import (
-	"net/http"
-	"github.com/julienschmidt/httprouter"
-	"io/ioutil"
+	"context"
 	"encoding/json"
-	"github.com/riyadennis/aes-encryption/client"
+	"io/ioutil"
+	"net/http"
+
+	"github.com/julienschmidt/httprouter"
+	"github.com/riyadennis/aes-encryption/ex/api"
+	"github.com/riyadennis/aes-encryption/ex/client"
 	"github.com/riyadennis/aes-encryption/middleware"
-	"fmt"
+	"github.com/riyadennis/aes-encryption/server"
 )
 
 type Input struct {
@@ -16,7 +19,6 @@ type Input struct {
 }
 
 func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	var response *ApiResponse
 	if req.Body == nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
@@ -38,13 +40,23 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 		return
 	}
 	ac := client.AesClient{Config: config}
-	key, err := ac.Store([]byte(i.Id), []byte(i.Data))
+
+	re := ac.DataRequest(i.Data, i.Id)
+
+	s := server.AesServer{
+		HttpStatus:    http.StatusOK,
+		EncryptionKey: re.Data.ToEncrypt,
+		Status:        "Success",
+	}
+	resp, err := s.Store(context.Background(), re)
 	if err != nil {
-		msg := fmt.Sprintf("Unable to store the data got error %s", err.Error())
-		response = createResponse(msg, "Error", http.StatusBadRequest)
-		jsonResponseDecorator(response, w)
+		jsonResponseDecorator(
+			&api.DataResponse{
+				HttpStatus:    http.StatusInternalServerError,
+				EncryptionKey: err.Error(),
+				Status:        "Error",
+			}, w)
 		return
 	}
-	response = createResponse(string(key), "Success", http.StatusOK)
-	jsonResponseDecorator(response, w)
+	jsonResponseDecorator(resp, w)
 }

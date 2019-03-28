@@ -1,16 +1,16 @@
 package handlers
 
 import (
-	"net/http"
-	"github.com/julienschmidt/httprouter"
-	"github.com/riyadennis/aes-encryption/middleware"
-	"github.com/riyadennis/aes-encryption/client"
 	"fmt"
+	"net/http"
+
+	"github.com/julienschmidt/httprouter"
+	"github.com/riyadennis/aes-encryption/ex/api"
+	"github.com/riyadennis/aes-encryption/ex/client"
+	"github.com/riyadennis/aes-encryption/middleware"
 )
 
-
 func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	var response *ApiResponse
 	key := req.Header.Get("key")
 	id := req.Header.Get("id")
 	if key == "" || id == "" {
@@ -26,11 +26,15 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 	ac := client.AesClient{Config: config}
 	data, err := ac.Retrieve([]byte(id), []byte(key))
 	if err != nil {
-		response = createResponse("Unable to retrieve data", "Error", http.StatusBadRequest)
+		response := &api.DataResponse{HttpStatus: http.StatusInternalServerError}
 		jsonResponseDecorator(response, w)
 		return
 	}
 	cipherText := fmt.Sprintf("cipher_text: %s", string(data))
-	response = createResponse(cipherText, "Success", http.StatusOK)
+	response := &api.DataResponse{
+		HttpStatus:    http.StatusOK,
+		Status:        "Success",
+		EncryptionKey: cipherText,
+	}
 	jsonResponseDecorator(response, w)
 }

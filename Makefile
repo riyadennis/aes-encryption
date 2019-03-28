@@ -20,3 +20,5 @@ migrate:
 
 migrate_down:
 	go run main.go -migrate=down
+proto:
+	protoc ex/api/data.proto --go_out=plugins=grpc:.
