@@ -4,7 +4,6 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
-	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
@@ -17,7 +16,7 @@ func VerifySignature(
 	toSign, signed []byte,
 	hash crypto.Hash,
 ) error {
-	h := sha256.New()
+	h := hash.New()
 	h.Write(toSign)
 
 	d := h.Sum(nil)

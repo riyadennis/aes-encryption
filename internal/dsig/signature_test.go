@@ -56,12 +56,12 @@ Mg8yePSnoLlSyVlZEod3RvAfH9tn9sCkK94= `
 }
 
 func TestSignatureVerification(t *testing.T) {
-	hash := crypto.SHA1
+	hashAlgo := crypto.SHA1
 	key, err := ioutil.ReadFile("server.key")
 	if err != nil {
 		t.Errorf("failed :: %v", err)
 	}
-	sig, err := CreateSignature(messageToSign, key, hash)
+	sig, err := CreateSignature(messageToSign, key, hashAlgo)
 	if err != nil {
 		t.Errorf("failed :: %v", err)
 	}
@@ -88,7 +88,7 @@ func TestSignatureVerification(t *testing.T) {
 	if !ok {
 		t.Errorf("certificate's public key is not RSA")
 	}
-	err = VerifySignature(publicKey, []byte(messageToSign), []byte(sig), hash)
+	err = VerifySignature(publicKey, []byte(messageToSign), []byte(sig), hashAlgo)
 	if err != nil {
 		t.Errorf("failed :: %v", err)
 	}
