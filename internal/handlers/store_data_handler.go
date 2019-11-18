@@ -46,12 +46,10 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 	}
 	resp, err := s.Store(context.Background(), re)
 	if err != nil {
-		jsonResponseDecorator(
-			&api.DataResponse{
-				HttpStatus: http.StatusInternalServerError,
-				Status:     fmt.Sprintf("%v", err),
-			}, w)
-		return
+		resp = &api.DataResponse{
+			HttpStatus: http.StatusInternalServerError,
+			Status:     fmt.Sprintf("%v", err),
+		}
 	}
 	jsonResponseDecorator(resp, w)
 }

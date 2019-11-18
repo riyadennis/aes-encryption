@@ -22,16 +22,19 @@ type ConfigReader interface {
 type Config struct {
 	Encrypter Encryptor `yaml:"encrypter"`
 }
+
 type Encryptor struct {
 	Port int `yaml:"port"`
 	Db   Db
 }
+
 type Db struct {
 	Source   string
 	Type     string
 	User     string
 	Password string
 }
+
 type Reader struct {
 }
 
@@ -50,6 +53,7 @@ func (fr Reader) Read(r io.Reader) (*Config, error) {
 
 	return &c, nil
 }
+
 func GetConfigFromContext(ctx context.Context) (*Config, error) {
 	config, ok := ctx.Value(ContextKey).(Config)
 
@@ -59,6 +63,7 @@ func GetConfigFromContext(ctx context.Context) (*Config, error) {
 	}
 	return &config, nil
 }
+
 func GetConfig(configPath string) (*Config, error) {
 	file, err := os.Open(configPath)
 	if err != nil {
@@ -71,6 +76,7 @@ func GetConfig(configPath string) (*Config, error) {
 	}
 	return config, err
 }
+
 func ConfigMiddleWare(next http.Handler, config *Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		newCtx := context.WithValue(r.Context(), ContextKey, config)

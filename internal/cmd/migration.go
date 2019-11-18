@@ -7,8 +7,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/golang-migrate/migrate/database/mysql"
 	"fmt"
+	"github.com/golang-migrate/migrate/database/mysql"
 )
 
 const (
@@ -19,14 +19,14 @@ const (
 	sourceUrl = "file://migrations/"
 )
 
-func MigrateUp(db *sql.DB, databaseName string) (bool){
+func MigrateUp(db *sql.DB, databaseName string) bool {
 	fmt.Println("Running migrations ..")
 	migrate := setUpForMigration(db, databaseName)
 	migrate.Steps(step)
 	fmt.Println("Done")
 	return true
 }
-func setUpForMigration(db *sql.DB, databaseName string)(*migrate.Migrate){
+func setUpForMigration(db *sql.DB, databaseName string) *migrate.Migrate {
 	migrationConfig := &mysql.Config{}
 	driver, _ := mysql.WithInstance(db, migrationConfig)
 	migrate, err := migrate.NewWithDatabaseInstance(
@@ -39,7 +39,7 @@ func setUpForMigration(db *sql.DB, databaseName string)(*migrate.Migrate){
 	}
 	return migrate
 }
-func MigrateDown(db *sql.DB, databaseName string) (bool){
+func MigrateDown(db *sql.DB, databaseName string) bool {
 	fmt.Println("Undoing  migrations")
 	migrate := setUpForMigration(db, databaseName)
 	migrate.Down()

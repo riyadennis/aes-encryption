@@ -20,6 +20,7 @@ Vct4fPGq5oTekspkynYvGYXU/A5iYKmsVKCC/ZwRmNY=`
 )
 
 func TestCreateSignatureWithHashSha256(t *testing.T) {
+	t.Parallel()
 	key, err := ioutil.ReadFile("server.key")
 	if err != nil {
 		t.Errorf("failed :: %v", err)
@@ -36,6 +37,7 @@ func TestCreateSignatureWithHashSha256(t *testing.T) {
 }
 
 func TestCreateSignatureWithHashSha1(t *testing.T) {
+	t.Parallel()
 	expectedSha1 := `
 xyPRuW0KXqLO47PGwMv1mflRDxMV7P+cnPHuNb4JaHajxus9B0U5Ai3wQ4SKWbXZoAe5
 XcblXhHCVgo1Jphnjb29zAocuDjj5PnokJ16l9UzJjaGRNtNYs9E6Rvn6DJE6nt0IESi
