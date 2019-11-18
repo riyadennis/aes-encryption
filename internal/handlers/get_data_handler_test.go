@@ -9,14 +9,13 @@ import (
 	"strings"
 
 	"github.com/riyadennis/aes-encryption/internal"
-	"github.com/riyadennis/aes-encryption/internal/handlers"
 )
 
 var _ = Describe("GetDataHandler", func() {
 	BeforeSuite(func() {
 		config, err := internal.GetConfig("../config_test.yaml")
 		Expect(err).To(BeNil())
-		go handlers.Run(config)
+		go Run(config)
 
 	})
 	Context("get bad request for a post", func() {

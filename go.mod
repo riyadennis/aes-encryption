@@ -14,6 +14,7 @@ require (
 	github.com/onsi/gomega v1.4.0
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/pkg/errors v0.8.0
+	github.com/riyadennis/aes-encryption/ex v0.0.0-20191118220344-51b3c20d16fb
 	github.com/sirupsen/logrus v1.0.5
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7 // indirect
