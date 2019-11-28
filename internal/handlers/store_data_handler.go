@@ -3,10 +3,9 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	"fmt"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/riyadennis/aes-encryption/ex/api"

@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"database/sql"
+
 	"github.com/golang-migrate/migrate"
 	"github.com/sirupsen/logrus"
 
 	_ "github.com/go-sql-driver/mysql"
 
 	"fmt"
+
 	"github.com/golang-migrate/migrate/database/mysql"
 )
 
