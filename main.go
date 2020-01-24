@@ -7,7 +7,7 @@ import (
 
 	main2 "github.com/riyadennis/aes-encryption/ex"
 
-	"github.com/riyadennis/aes-encryption/internal/cmd"
+	"github.com/riyadennis/aes-encryption/data/cmd"
 	"github.com/riyadennis/aes-encryption/internal/handlers"
 
 	_ "github.com/go-sql-driver/mysql"

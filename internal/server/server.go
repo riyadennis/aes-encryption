@@ -38,7 +38,7 @@ func (ae *AesServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataR
 
 	return &api.DataResponse{
 		HttpStatus:    http.StatusOK,
-		EncryptionKey: string(key),
+		EncryptionKey: key,
 		Status:        "Success",
 	}, nil
 }
@@ -61,7 +61,10 @@ func encrypt(plainText, key string) ([]byte, error) {
 		return nil, err
 	}
 	nonce := make([]byte, gcm.NonceSize())
-	io.ReadFull(rand.Reader, nonce)
+	_, err = io.ReadFull(rand.Reader, nonce)
+	if err != nil {
+		return nil, err
+	}
 	return gcm.Seal(nonce, nonce, []byte(plainText), nil), nil
 }
 

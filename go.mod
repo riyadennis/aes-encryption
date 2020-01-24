@@ -6,8 +6,8 @@ require (
 	github.com/docker/docker v1.13.1 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
-	github.com/go-sql-driver/mysql v0.0.0-20180530100258-7413002f368f
-	github.com/golang-migrate/migrate v3.3.0+incompatible
+	github.com/go-sql-driver/mysql v1.5.0
+	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/julienschmidt/httprouter v1.1.0
 	github.com/onsi/ginkgo v1.5.0 // indirect
 	github.com/onsi/gomega v1.4.0 // indirect

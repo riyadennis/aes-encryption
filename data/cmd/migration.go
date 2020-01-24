@@ -20,15 +20,19 @@ const (
 
 func MigrateUp(db *sql.DB, databaseName string) bool {
 	fmt.Println("Running migrations ..")
-	migrate := setUpForMigration(db, databaseName)
-	migrate.Steps(step)
+	m := setUpForMigration(db, databaseName)
+	err := m.Steps(step)
+	if err != nil {
+		logrus.Errorf("unable to run migration :: %v", err)
+		return false
+	}
 	fmt.Println("Done")
 	return true
 }
 func setUpForMigration(db *sql.DB, databaseName string) *migrate.Migrate {
 	migrationConfig := &mysql.Config{}
 	driver, _ := mysql.WithInstance(db, migrationConfig)
-	migrate, err := migrate.NewWithDatabaseInstance(
+	m, err := migrate.NewWithDatabaseInstance(
 		sourceUrl,
 		databaseName,
 		driver,
@@ -36,12 +40,16 @@ func setUpForMigration(db *sql.DB, databaseName string) *migrate.Migrate {
 	if err != nil {
 		logrus.Fatalf("%v", err)
 	}
-	return migrate
+	return m
 }
 func MigrateDown(db *sql.DB, databaseName string) bool {
 	fmt.Println("Undoing  migrations")
-	migrate := setUpForMigration(db, databaseName)
-	migrate.Down()
+	m := setUpForMigration(db, databaseName)
+	err := m.Down()
+	if err != nil {
+		logrus.Errorf("unable to run migration down :: %v", err)
+		return false
+	}
 	fmt.Println("Done")
 	return true
 }

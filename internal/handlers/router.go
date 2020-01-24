@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/riyadennis/aes-encryption/ex/api"
-
-	"github.com/julienschmidt/httprouter"
 	"github.com/sirupsen/logrus"
 )
 
@@ -24,6 +23,7 @@ func Run(config *ex.Config) {
 
 func jsonResponseDecorator(response *api.DataResponse, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(int(response.HttpStatus))
 	err := json.NewEncoder(w).Encode(response)
 	if err != nil {
 		http.Error(w, err.Error(), int(response.GetHttpStatus()))
