@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/sirupsen/logrus"
 )
 
@@ -10,7 +11,7 @@ type Data struct {
 	EncryptedText string
 }
 
-func SavePayload(id, key string, payLoad []byte, confDb main.Db) error {
+func SavePayload(id, key string, payLoad []byte, confDb ex.Db) error {
 	db, err := InitDB(confDb)
 	defer db.Close()
 	if err != nil {
@@ -30,7 +31,7 @@ func SavePayload(id, key string, payLoad []byte, confDb main.Db) error {
 	return nil
 }
 
-func GetPayLoad(id string, confDb main.Db) (*Data, error) {
+func GetPayLoad(id string, confDb ex.Db) (*Data, error) {
 	var encrypted_text string
 	var data Data
 	db, err := InitDB(confDb)
