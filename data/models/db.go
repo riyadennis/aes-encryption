@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/riyadennis/aes-encryption/internal"
 	"github.com/sirupsen/logrus"
 )
 
-func InitDB(db internal.Db) (*sql.DB, error) {
+func InitDB(db main.Db) (*sql.DB, error) {
 	//for mysql
 	dbConnectionString := fmt.Sprintf("%s:%s@/%s?multiStatements=true", db.User, db.Password, db.Source)
 	if db.Type == "sqlite3" {

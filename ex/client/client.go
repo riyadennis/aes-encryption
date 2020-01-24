@@ -7,10 +7,11 @@ import (
 	"io"
 	mathRand "math/rand"
 
+	"github.com/riyadennis/aes-encryption/data/models"
+	"github.com/riyadennis/aes-encryption/ex"
+
 	"github.com/pkg/errors"
 	"github.com/riyadennis/aes-encryption/ex/api"
-	"github.com/riyadennis/aes-encryption/internal"
-	"github.com/riyadennis/aes-encryption/internal/models"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -36,7 +37,7 @@ func (ac AesClient) DataRequest(payLoad, encryptionId string) *api.DataRequest {
 }
 
 func (ac AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
-	config, err := internal.GetConfig(internal.DefaultConfigPath)
+	config, err := ex.GetConfig(ex.DefaultConfigPath)
 	if err != nil {
 		return nil, err
 	}
