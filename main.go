@@ -2,12 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"os"
 
-	main2 "github.com/riyadennis/aes-encryption/ex"
-
-	"github.com/riyadennis/aes-encryption/data/cmd"
+	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/riyadennis/aes-encryption/internal/handlers"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -17,20 +13,11 @@ import (
 )
 
 func main() {
-	configFlag := flag.String("config", main2.DefaultConfigPath, "Path to the config file")
-	migrateFlag := flag.String("migrate", "up", "To Create tables up to delete them down ")
+	configFlag := flag.String("config", ex.DefaultConfigPath, "Path to the config file")
 	flag.Parse()
-	config, err := main2.GetConfig(*configFlag)
+	config, err := ex.GetConfig(*configFlag)
 	if err != nil {
 		logrus.Errorf("Unable to fetch config %s", err.Error())
-	}
-	if len(os.Args) < 2 {
-		fmt.Println("Please enter an option")
-		os.Exit(1)
-	}
-	if os.Args[1] == "-migrate=up" || os.Args[1] == "-migrate=down" {
-		cmd.ExecuteCommand(*migrateFlag, config)
-		os.Exit(0)
 	}
 	handlers.Run(config)
 	server.Run()

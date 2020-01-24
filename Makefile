@@ -17,3 +17,12 @@ migrate_down:
 
 proto:
 	protoc ex/api/data.proto --go_out=plugins=grpc:.
+
+docker-build:
+	docker build -t riyadennis/aes-encryption .
+
+docker-run:
+	docker run --rm -p 8086:8086  aes-encryption
+
+docker-push:
+	docker push riyadennis/aes-encryption:latest

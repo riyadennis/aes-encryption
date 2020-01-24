@@ -29,6 +29,7 @@ func MigrateUp(db *sql.DB, databaseName string) bool {
 	fmt.Println("Done")
 	return true
 }
+
 func setUpForMigration(db *sql.DB, databaseName string) *migrate.Migrate {
 	migrationConfig := &mysql.Config{}
 	driver, _ := mysql.WithInstance(db, migrationConfig)
@@ -42,6 +43,7 @@ func setUpForMigration(db *sql.DB, databaseName string) *migrate.Migrate {
 	}
 	return m
 }
+
 func MigrateDown(db *sql.DB, databaseName string) bool {
 	fmt.Println("Undoing  migrations")
 	m := setUpForMigration(db, databaseName)
