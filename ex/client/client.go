@@ -7,10 +7,9 @@ import (
 	"io"
 	mathRand "math/rand"
 
+	"github.com/pkg/errors"
 	"github.com/riyadennis/aes-encryption/data/models"
 	"github.com/riyadennis/aes-encryption/ex"
-
-	"github.com/pkg/errors"
 	"github.com/riyadennis/aes-encryption/ex/api"
 )
 

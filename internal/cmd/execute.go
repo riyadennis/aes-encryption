@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"github.com/riyadennis/aes-encryption/internal"
-	"github.com/riyadennis/aes-encryption/internal/models"
+	"github.com/riyadennis/aes-encryption/data/models"
+	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/sirupsen/logrus"
 )
 
-func ExecuteCommand(migrateChoice string, config *internal.Config) bool {
+func ExecuteCommand(migrateChoice string, config *ex.Config) bool {
 	db, err := models.InitDB(config.Encrypter.Db)
 	if err != nil {
 		logrus.Errorf("Unable initial  %s", err.Error())

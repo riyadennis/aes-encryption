@@ -34,6 +34,7 @@ github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:
 github.com/riyadennis/aes-encryption v0.0.0-20191128221241-6769d6360d0f h1:2PGtRWJ1DoiQDj6luUDfyIgzGGPfR4FVJ67Pxzy61pM=
 github.com/riyadennis/aes-encryption v0.0.0-20191128221241-6769d6360d0f/go.mod h1:82OGpbgSfm3OhjjwU2xjxx2MC/w1j2qLCLid8GOy3B4=
 github.com/riyadennis/aes-encryption v0.0.0-20200124133050-8acea220b7f8/go.mod h1:82OGpbgSfm3OhjjwU2xjxx2MC/w1j2qLCLid8GOy3B4=
+github.com/riyadennis/aes-encryption/data v0.0.0-20200124133616-30a33ec1727f/go.mod h1:gGW2mhcbj7kKCGabQsmP2tAqVg1kjg+QPWbab98vAtI=
 github.com/riyadennis/aes-encryption/ex v0.0.0-20191118220344-51b3c20d16fb/go.mod h1:QS3kGg8GcCsYlhnbFdkbt9UvoB3nyPqvgWVrPHimbbo=
 github.com/riyadennis/aes-encryption/ex v0.0.0-20191128221241-6769d6360d0f h1:5Matcb4xTQOjIlCBuVTmQuE54lhR9z4P0LGmk/vOln0=
 github.com/riyadennis/aes-encryption/ex v0.0.0-20191128221241-6769d6360d0f/go.mod h1:QS3kGg8GcCsYlhnbFdkbt9UvoB3nyPqvgWVrPHimbbo=

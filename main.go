@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/riyadennis/aes-encryption/internal"
+	main2 "github.com/riyadennis/aes-encryption/ex"
+
 	"github.com/riyadennis/aes-encryption/internal/cmd"
 	"github.com/riyadennis/aes-encryption/internal/handlers"
 
@@ -16,10 +17,10 @@ import (
 )
 
 func main() {
-	configFlag := flag.String("config", internal.DefaultConfigPath, "Path to the config file")
+	configFlag := flag.String("config", main2.DefaultConfigPath, "Path to the config file")
 	migrateFlag := flag.String("migrate", "up", "To Create tables up to delete them down ")
 	flag.Parse()
-	config, err := internal.GetConfig(*configFlag)
+	config, err := main2.GetConfig(*configFlag)
 	if err != nil {
 		logrus.Errorf("Unable to fetch config %s", err.Error())
 	}

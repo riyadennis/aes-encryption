@@ -8,12 +8,11 @@ import (
 	"io"
 	mathRand "math/rand"
 	"net"
-
 	"net/http"
 
+	"github.com/riyadennis/aes-encryption/data/models"
+	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/riyadennis/aes-encryption/ex/api"
-	"github.com/riyadennis/aes-encryption/internal"
-	"github.com/riyadennis/aes-encryption/internal/models"
 	"google.golang.org/grpc"
 )
 
@@ -28,7 +27,7 @@ type AesServer struct {
 func (ae *AesServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataResponse, error) {
 	key := randSeq(16)
 	encryptedText, err := encrypt(dr.Data.ToEncrypt, dr.Data.EncryptionId)
-	cnf, err := internal.GetConfig(internal.DefaultConfigPath)
+	cnf, err := ex.GetConfig(ex.DefaultConfigPath)
 	if err != nil {
 		return nil, err
 	}
