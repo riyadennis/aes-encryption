@@ -11,7 +11,7 @@ import (
 
 func InitDB(db ex.Db) (*sql.DB, error) {
 	//for mysql
-	dbConnectionString := fmt.Sprintf("%s:%s@/%s?multiStatements=true", db.User, db.Password, db.Source)
+	dbConnectionString := fmt.Sprintf("%s:%s@tcp(mysql-development:3306)/%s?multiStatements=true", db.User, db.Password, db.Source)
 	if db.Type == "sqlite3" {
 		dbConnectionString = db.Source
 	}
