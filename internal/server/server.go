@@ -27,11 +27,14 @@ type AesServer struct {
 func (ae *AesServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataResponse, error) {
 	key := randSeq(16)
 	encryptedText, err := encrypt(dr.Data.ToEncrypt, dr.Data.EncryptionId)
+	if err != nil {
+		return nil, err
+	}
 	cnf, err := ex.GetConfig(ex.DefaultConfigPath)
 	if err != nil {
 		return nil, err
 	}
-	err = models.SavePayload(string(dr.Data.EncryptionId), string(key), encryptedText, cnf.Encrypter.Db)
+	err = models.SavePayload(dr.Data.EncryptionId, key, encryptedText, cnf.Encrypter.Db)
 	if err != nil {
 		return nil, err
 	}
