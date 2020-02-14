@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"github.com/sirupsen/logrus"
 	"io"
 	mathRand "math/rand"
 
@@ -27,7 +28,7 @@ type Client interface {
 type AesClient struct {
 	Id   string `json:"id"`
 	Key  string `json:"key;omitempty"`
-	Data string `json:"data"`
+	Data string `json:"data;omitempty"`
 }
 
 func (ac *AesClient) DataRequest() *api.DataRequest {
@@ -42,14 +43,17 @@ func (ac *AesClient) DataRequest() *api.DataRequest {
 func (ac *AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
 	config, err := ex.GetConfig(ex.DefaultConfigPath)
 	if err != nil {
+		logrus.Errorf("unable to open config :: %v", err)
 		return nil, err
 	}
 	data, err := models.GetPayLoad(string(id), config.Encrypter.Db)
 	if err != nil {
+		logrus.Errorf("unable to fetch payload :: %v", err)
 		return nil, err
 	}
 	decryptedText, err := decrypt([]byte(data.EncryptedText), aesKey)
 	if err != nil {
+		logrus.Errorf("decryption failed :: %v", err)
 		return nil, err
 	}
 	return decryptedText, nil

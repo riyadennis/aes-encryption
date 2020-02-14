@@ -18,7 +18,8 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 		return
 	}
 	ac := &client.AesClient{
-		Id: id,
+		Id:  id,
+		Key: key,
 	}
 	data, err := ac.Retrieve([]byte(id), []byte(key))
 	if err != nil {
