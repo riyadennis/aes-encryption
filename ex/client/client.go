@@ -24,18 +24,22 @@ type Client interface {
 	Retrieve(id, aesKey []byte) (payload []byte, err error)
 }
 
-type AesClient struct{}
+type AesClient struct {
+	Id   string `json:"id"`
+	Key  string `json:"key;omitempty"`
+	Data string `json:"data"`
+}
 
-func (ac AesClient) DataRequest(payLoad, encryptionId string) *api.DataRequest {
+func (ac *AesClient) DataRequest() *api.DataRequest {
 	return &api.DataRequest{
 		Data: &api.Data{
-			ToEncrypt:    payLoad,
-			EncryptionId: encryptionId,
+			ToEncrypt:    ac.Data,
+			EncryptionId: ac.Id,
 		},
 	}
 }
 
-func (ac AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
+func (ac *AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
 	config, err := ex.GetConfig(ex.DefaultConfigPath)
 	if err != nil {
 		return nil, err

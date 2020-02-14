@@ -5,15 +5,14 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"io"
-	mathRand "math/rand"
-	"net"
-	"net/http"
-
 	"github.com/riyadennis/aes-encryption/data/models"
 	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"google.golang.org/grpc"
+	"io"
+	mathRand "math/rand"
+	"net"
+	"net/http"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")

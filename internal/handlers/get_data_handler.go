@@ -17,7 +17,9 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
-	ac := client.AesClient{}
+	ac := &client.AesClient{
+		Id: id,
+	}
 	data, err := ac.Retrieve([]byte(id), []byte(key))
 	if err != nil {
 		response := &api.DataResponse{HttpStatus: http.StatusInternalServerError}

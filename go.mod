@@ -15,12 +15,10 @@ require (
 	github.com/riyadennis/aes-encryption/data v0.0.0-20200124133616-30a33ec1727f
 	github.com/riyadennis/aes-encryption/ex v0.0.0-20191128221241-6769d6360d0f
 	github.com/sirupsen/logrus v1.4.2
-	github.com/stretchr/testify v1.4.0
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7 // indirect
 	google.golang.org/grpc v1.26.0
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
-	gopkg.in/yaml.v2 v2.2.8
 )
 
 go 1.13

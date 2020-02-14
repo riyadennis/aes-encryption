@@ -13,11 +13,6 @@ import (
 	"github.com/riyadennis/aes-encryption/internal/server"
 )
 
-type Input struct {
-	Data string `json:"data"`
-	Id   string `json:"id"`
-}
-
 func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	if req.Body == nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -28,15 +23,13 @@ func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Par
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	i := &Input{}
-	err = json.Unmarshal(requestBody, i)
+	ac := &client.AesClient{}
+	err = json.Unmarshal(requestBody, ac)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	ac := client.AesClient{}
-
-	re := ac.DataRequest(i.Data, i.Id)
+	re := ac.DataRequest()
 
 	s := server.AesServer{
 		HttpStatus:    http.StatusOK,
