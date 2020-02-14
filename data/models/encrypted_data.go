@@ -32,21 +32,21 @@ func SavePayload(id, key string, payLoad []byte, confDb ex.Db) error {
 }
 
 func GetPayLoad(id string, confDb ex.Db) (*Data, error) {
-	var encrypted_text string
+	var encryptedText string
 	var data Data
 	db, err := InitDB(confDb)
 	defer db.Close()
 	if err != nil {
-		logrus.Errorf("Unable to get data from db %s", err.Error())
+		logrus.Errorf("failed to initialise database :: %v", err)
 		return nil, err
 	}
 	query := "SELECT encrypted_text from " + tableName + " where id = '" + id + "'"
 	row := db.QueryRow(query)
-	err = row.Scan(&encrypted_text)
+	err = row.Scan(&encryptedText)
 	if err != nil {
-		logrus.Errorf("Unable to get image details %s", err.Error())
+		logrus.Errorf("failed to fetch data from table :: %v", err)
 		return nil, err
 	}
-	data.EncryptedText = encrypted_text
+	data.EncryptedText = encryptedText
 	return &data, nil
 }

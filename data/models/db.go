@@ -17,7 +17,7 @@ func InitDB(db ex.Db) (*sql.DB, error) {
 	}
 	dbConnector, err := sql.Open(db.Type, dbConnectionString)
 	if err != nil {
-		logrus.Errorf("Unable to start database %s", err.Error())
+		logrus.Errorf("unable to start database :: %v", err)
 		return nil, err
 	}
 	return dbConnector, nil

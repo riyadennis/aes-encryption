@@ -3,9 +3,7 @@ package client
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
 	"github.com/sirupsen/logrus"
-	"io"
 	mathRand "math/rand"
 
 	"github.com/pkg/errors"
@@ -48,7 +46,7 @@ func (ac *AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
 	}
 	data, err := models.GetPayLoad(string(id), config.Encrypter.Db)
 	if err != nil {
-		logrus.Errorf("unable to fetch payload :: %v", err)
+		//already logged
 		return nil, err
 	}
 	decryptedText, err := decrypt([]byte(data.EncryptedText), aesKey)
@@ -59,19 +57,6 @@ func (ac *AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
 	return decryptedText, nil
 }
 
-func encrypt(plainText, key string) ([]byte, error) {
-	c, err := aes.NewCipher([]byte(key))
-	if err != nil {
-		return nil, err
-	}
-	gcm, err := cipher.NewGCM(c)
-	if err != nil {
-		return nil, err
-	}
-	nonce := make([]byte, gcm.NonceSize())
-	io.ReadFull(rand.Reader, nonce)
-	return gcm.Seal(nonce, nonce, []byte(plainText), nil), nil
-}
 func decrypt(encryptedText, key []byte) ([]byte, error) {
 	c, err := aes.NewCipher(key)
 	if err != nil {
