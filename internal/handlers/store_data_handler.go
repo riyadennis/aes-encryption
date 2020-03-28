@@ -1,47 +1,65 @@
 package handlers
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/riyadennis/aes-encryption/data/models"
+	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/riyadennis/aes-encryption/ex/client"
-	"github.com/riyadennis/aes-encryption/internal/server"
 )
 
 func StoreDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	var resp *api.DataResponse
 	if req.Body == nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		jsonResponseDecorator(&api.DataResponse{
+			HttpStatus: http.StatusBadRequest,
+			Status:     fmt.Sprintf("invalid body"),
+		}, w)
 		return
 	}
 	requestBody, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		jsonResponseDecorator(&api.DataResponse{
+			HttpStatus: http.StatusBadRequest,
+			Status:     fmt.Sprintf("%v", err),
+		}, w)
 		return
 	}
 	ac := &client.AesClient{}
 	err = json.Unmarshal(requestBody, ac)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		jsonResponseDecorator(&api.DataResponse{
+			HttpStatus: http.StatusBadRequest,
+			Status:     fmt.Sprintf("%v", err),
+		}, w)
 		return
 	}
-	re := ac.DataRequest()
-
-	s := server.AesServer{
-		HttpStatus:    http.StatusOK,
-		EncryptionKey: re.Data.ToEncrypt,
-		Status:        "Success",
-	}
-	resp, err := s.Store(context.Background(), re)
+	cnf, err := ex.GetConfig(ex.DefaultConfigPath)
 	if err != nil {
-		resp = &api.DataResponse{
+		jsonResponseDecorator(&api.DataResponse{
+			HttpStatus: http.StatusBadRequest,
+			Status:     fmt.Sprintf("%v", err),
+		}, w)
+		return
+	}
+	err = models.SavePayload(ac.Id, ac.Key,
+		[]byte(ac.Data), cnf.Encrypter.Db)
+	if err != nil {
+		jsonResponseDecorator(&api.DataResponse{
 			HttpStatus: http.StatusInternalServerError,
 			Status:     fmt.Sprintf("%v", err),
-		}
+		}, w)
+		return
+	}
+	resp = &api.DataResponse{
+		HttpStatus:    http.StatusOK,
+		Status:        "Success",
+		EncryptionKey: ac.Key,
 	}
 	jsonResponseDecorator(resp, w)
 }

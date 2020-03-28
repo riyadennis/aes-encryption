@@ -5,14 +5,15 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"github.com/riyadennis/aes-encryption/data/models"
-	"github.com/riyadennis/aes-encryption/ex"
-	"github.com/riyadennis/aes-encryption/ex/api"
-	"google.golang.org/grpc"
 	"io"
 	mathRand "math/rand"
 	"net"
 	"net/http"
+
+	"github.com/riyadennis/aes-encryption/data/models"
+	"github.com/riyadennis/aes-encryption/ex"
+	"github.com/riyadennis/aes-encryption/ex/api"
+	"google.golang.org/grpc"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -76,7 +77,7 @@ func Run() {
 		panic(err)
 	}
 	server := grpc.NewServer()
-	api.RegisterDataServiceServer(server, &AesServer{})
+	api.RegisterAesServer(server, &AesServer{})
 	if err = server.Serve(listener); err != nil {
 		panic(err)
 	}

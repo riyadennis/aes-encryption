@@ -16,7 +16,7 @@ message DataResponse{
     string status = 3;
 }
 
-service DataService{
+service Aes{
     // unary call for now
     rpc Store(DataRequest) returns (DataResponse){};
 }

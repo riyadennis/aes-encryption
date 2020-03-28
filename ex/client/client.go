@@ -1,21 +1,23 @@
 package client
 
 import (
+	"context"
 	"crypto/aes"
 	"crypto/cipher"
-	"github.com/sirupsen/logrus"
-	mathRand "math/rand"
 
 	"github.com/pkg/errors"
 	"github.com/riyadennis/aes-encryption/data/models"
 	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/riyadennis/aes-encryption/ex/api"
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type Client interface {
-	Store(payLoad, encryptionId string) *api.DataRequest
+	Store(ctx context.Context, in *api.DataRequest,
+		opts ...grpc.CallOption) (*api.DataResponse, error)
 
 	// Retrieve accepts an id and an AES key, and requests that the
 	// encryption-server retrieves the original (decrypted) bytes stored
@@ -38,18 +40,18 @@ func (ac *AesClient) DataRequest() *api.DataRequest {
 	}
 }
 
-func (ac *AesClient) Retrieve(id, aesKey []byte) (payload []byte, err error) {
+func (ac *AesClient) Retrieve() (payload []byte, err error) {
 	config, err := ex.GetConfig(ex.DefaultConfigPath)
 	if err != nil {
 		logrus.Errorf("unable to open config :: %v", err)
 		return nil, err
 	}
-	data, err := models.GetPayLoad(string(id), config.Encrypter.Db)
+	data, err := models.GetPayLoad(ac.Id, config.Encrypter.Db)
 	if err != nil {
 		//already logged
 		return nil, err
 	}
-	decryptedText, err := decrypt([]byte(data.EncryptedText), aesKey)
+	decryptedText, err := decrypt([]byte(data.EncryptedText), []byte(ac.Key))
 	if err != nil {
 		logrus.Errorf("decryption failed :: %v", err)
 		return nil, err
@@ -72,12 +74,4 @@ func decrypt(encryptedText, key []byte) ([]byte, error) {
 	}
 	nonce, decryptedText := encryptedText[:nonceSize], encryptedText[nonceSize:]
 	return gcm.Open(nil, nonce, decryptedText, nil)
-}
-
-func randSeq(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letters[mathRand.Intn(len(letters))]
-	}
-	return string(b)
 }

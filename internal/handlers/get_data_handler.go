@@ -18,10 +18,11 @@ func GetDataHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Param
 		return
 	}
 	ac := &client.AesClient{
-		Id:  id,
-		Key: key,
+		Id:   id,
+		Key:  key,
+		Data: "",
 	}
-	data, err := ac.Retrieve([]byte(id), []byte(key))
+	data, err := ac.Retrieve()
 	if err != nil {
 		response := &api.DataResponse{HttpStatus: http.StatusInternalServerError}
 		jsonResponseDecorator(response, w)
