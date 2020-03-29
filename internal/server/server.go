@@ -9,8 +9,6 @@ import (
 
 	"github.com/riyadennis/aes-encryption/internal"
 
-	"github.com/riyadennis/aes-encryption/data/models"
-	"github.com/riyadennis/aes-encryption/ex"
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/sirupsen/logrus"
 )
@@ -30,7 +28,7 @@ func (ds *DataServiceServer) Store(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
-	re, err := data.Insert(ctx, collection)
+	re, err := store.Insert(ctx, data)
 	if err != nil {
 		return nil, err
 	}
@@ -42,17 +40,12 @@ func (ds *DataServiceServer) Store(ctx context.Context,
 }
 
 func (ds *DataServiceServer) Retrieve(ctx context.Context, req *api.RetrieveRequest) (*api.RetrieveResponse, error) {
-	config, err := ex.GetConfig(ex.DefaultConfigPath)
+	data, err := store.RetrieveContent(ctx, req.EncryptionId)
 	if err != nil {
-		logrus.Errorf("unable to open config :: %v", err)
+		logrus.Errorf("read from db failed :: %v", err)
 		return nil, err
 	}
-	data, err := models.GetPayLoad(req.EncryptionId, config.Encrypter.Db)
-	if err != nil {
-		//already logged
-		return nil, err
-	}
-	decryptedText, err := decrypt([]byte(data.EncryptedText), []byte(req.EncryptionKey))
+	decryptedText, err := decrypt([]byte(data.Content), []byte(req.EncryptionKey))
 	if err != nil {
 		logrus.Errorf("decryption failed :: %v", err)
 		return nil, err

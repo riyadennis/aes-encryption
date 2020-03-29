@@ -8,15 +8,14 @@ import (
 	"os/signal"
 
 	"github.com/riyadennis/aes-encryption/ex/api"
-
+	"github.com/riyadennis/aes-encryption/internal/db"
 	"github.com/sirupsen/logrus"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
 )
 
-var collection *mongo.Collection
+var store *db.MongoD
 
 // Settings holds the settings need to run the enpoints
 type Settings struct {
@@ -45,10 +44,10 @@ func NewSettings(addr string) (*Settings, error) {
 }
 
 func Run(ctx context.Context) {
-	addr := "0.0.0.0:5051"
+	addr := "0.0.0.0:5052"
 	settings, err := NewSettings(addr)
 	if err != nil {
-		logrus.Fatal("unable to initialise settings :: %v", err)
+		logrus.Fatalf("unable to initialise settings :: %v", err)
 	}
 	s := &DataServiceServer{}
 	api.RegisterDataServiceServer(settings.Server, s)
@@ -58,8 +57,8 @@ func Run(ctx context.Context) {
 		}
 	}()
 	err = settings.DBClient.Connect(ctx)
-	collection = settings.DBClient.Database("encrypted-data").
-		Collection("text")
+	store = &db.MongoD{Collection: settings.DBClient.Database(
+		"encrypted-data").Collection("text")}
 	settings.cleanup(ctx)
 }
 
