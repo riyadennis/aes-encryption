@@ -2,8 +2,7 @@ syntax = "proto3";
 package api;
 
 message Data{
-    string to_encrypt = 1;
-    string encryption_id = 2;
+    string message = 1;
 }
 
 message DataRequest{
@@ -13,10 +12,20 @@ message DataRequest{
 message DataResponse{
     int32 http_status =1;
     string encryption_key = 2;
-    string status = 3;
+    string encryption_id = 3;
 }
 
-service Aes{
+message RetrieveRequest{
+    string encryption_key = 1;
+    string encryption_id = 2;
+}
+
+message RetrieveResponse{
+    Data data = 1;
+}
+
+service DataService{
     // unary call for now
     rpc Store(DataRequest) returns (DataResponse){};
+    rpc Retrieve(RetrieveRequest) returns (RetrieveResponse){};
 }

@@ -5,10 +5,14 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"errors"
+	"fmt"
 	"io"
 	mathRand "math/rand"
 	"net"
 	"net/http"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/riyadennis/aes-encryption/data/models"
 	"github.com/riyadennis/aes-encryption/ex"
@@ -18,15 +22,20 @@ import (
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-type AesServer struct {
+type DataServiceServer struct {
 	HttpStatus    int32
 	EncryptionKey string
 	Status        string
 }
 
-func (ae *AesServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataResponse, error) {
+func (ds *DataServiceServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataResponse, error) {
+	if dr.Data == nil {
+		return nil, errors.New("invalid request")
+	}
 	key := randSeq(16)
-	encryptedText, err := encrypt(dr.Data.ToEncrypt, dr.Data.EncryptionId)
+	id := randSeq(32)
+
+	encryptedText, err := encrypt(dr.Data.Message, id)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +43,7 @@ func (ae *AesServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataR
 	if err != nil {
 		return nil, err
 	}
-	err = models.SavePayload(dr.Data.EncryptionId, key, encryptedText, cnf.Encrypter.Db)
+	err = models.SavePayload(id, key, encryptedText, cnf.Encrypter.Db)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +51,28 @@ func (ae *AesServer) Store(ctx context.Context, dr *api.DataRequest) (*api.DataR
 	return &api.DataResponse{
 		HttpStatus:    http.StatusOK,
 		EncryptionKey: key,
-		Status:        "Success",
+		EncryptionId:  id,
+	}, nil
+}
+
+func (ds *DataServiceServer) Retrieve(ctx context.Context, req *api.RetrieveRequest) (*api.RetrieveResponse, error) {
+	config, err := ex.GetConfig(ex.DefaultConfigPath)
+	if err != nil {
+		logrus.Errorf("unable to open config :: %v", err)
+		return nil, err
+	}
+	data, err := models.GetPayLoad(req.EncryptionId, config.Encrypter.Db)
+	if err != nil {
+		//already logged
+		return nil, err
+	}
+	decryptedText, err := decrypt([]byte(data.EncryptedText), []byte(req.EncryptionKey))
+	if err != nil {
+		logrus.Errorf("decryption failed :: %v", err)
+		return nil, err
+	}
+	return &api.RetrieveResponse{
+		Data: &api.Data{Message: string(decryptedText)},
 	}, nil
 }
 
@@ -71,13 +101,33 @@ func encrypt(plainText, key string) ([]byte, error) {
 	return gcm.Seal(nonce, nonce, []byte(plainText), nil), nil
 }
 
+func decrypt(encryptedText, key []byte) ([]byte, error) {
+	c, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	gcm, err := cipher.NewGCM(c)
+	if err != nil {
+		return nil, err
+	}
+	nonceSize := gcm.NonceSize()
+	if len(encryptedText) < nonceSize {
+		return nil, errors.New("Error encrypted text is too small")
+	}
+	nonce, decryptedText := encryptedText[:nonceSize], encryptedText[nonceSize:]
+	return gcm.Open(nil, nonce, decryptedText, nil)
+}
+
 func Run() {
-	listener, err := net.Listen("tcp", "0.0.0.0:5051")
+	addr := "0.0.0.0:5051"
+	fmt.Printf("Listenning to port %s \n", addr)
+	listener, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 	server := grpc.NewServer()
-	api.RegisterAesServer(server, &AesServer{})
+	s := &DataServiceServer{}
+	api.RegisterDataServiceServer(server, s)
 	if err = server.Serve(listener); err != nil {
 		panic(err)
 	}
