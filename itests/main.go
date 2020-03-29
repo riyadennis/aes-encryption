@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial("0.0.0.0:5051", grpc.WithInsecure())
+	conn, err := grpc.Dial("0.0.0.0:5051",
+		grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}

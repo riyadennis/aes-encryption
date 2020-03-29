@@ -8,6 +8,7 @@ require (
 	github.com/riyadennis/aes-encryption/ex v0.0.0-20191128221241-6769d6360d0f
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.4.0
+	go.mongodb.org/mongo-driver v1.3.1
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7 // indirect
 	google.golang.org/grpc v1.27.1
 )
