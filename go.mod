@@ -3,6 +3,7 @@ module github.com/riyadennis/aes-encryption
 require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang-migrate/migrate v3.5.4+incompatible
+	github.com/joho/godotenv v1.3.0
 	github.com/riyadennis/aes-encryption/ex v0.0.0-20191128221241-6769d6360d0f
 	github.com/sirupsen/logrus v1.4.2
 	go.mongodb.org/mongo-driver v1.3.1

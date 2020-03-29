@@ -30,8 +30,8 @@ func NewSettings(addr string) (*Settings, error) {
 	if err != nil {
 		return nil, err
 	}
-	mongo, err := mongo.NewClient(
-		options.Client().ApplyURI("mongodb://localhost:27017"),
+	mongoClient, err := mongo.NewClient(
+		options.Client().ApplyURI(os.Getenv("MONGO_URI")),
 	)
 	if err != nil {
 		return nil, err
@@ -39,13 +39,12 @@ func NewSettings(addr string) (*Settings, error) {
 	return &Settings{
 		Server:   grpc.NewServer(),
 		Listener: lis,
-		DBClient: mongo,
+		DBClient: mongoClient,
 	}, nil
 }
 
 func Run(ctx context.Context) {
-	addr := "0.0.0.0:5052"
-	settings, err := NewSettings(addr)
+	settings, err := NewSettings(os.Getenv("ADDR"))
 	if err != nil {
 		logrus.Fatalf("unable to initialise settings :: %v", err)
 	}
@@ -71,7 +70,13 @@ func (s *Settings) cleanup(ctx context.Context) {
 	fmt.Println("stopping server")
 	s.Server.Stop()
 	fmt.Println("closing the listener")
-	s.Listener.Close()
+	err := s.Listener.Close()
+	if err != nil {
+		logrus.Fatalf("unable to shut down grace fully :: %v", err)
+	}
 	fmt.Println("closing mongo db connection")
-	s.DBClient.Disconnect(ctx)
+	err = s.DBClient.Disconnect(ctx)
+	if err != nil {
+		logrus.Fatalf("unable to shut down grace fully :: %v", err)
+	}
 }
