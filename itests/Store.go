@@ -17,7 +17,7 @@ exploration of work flows so you can learn to orchestrate your build,
 tests, security scans, approval steps, and deployment.
 `
 
-func StoreTest(cl api.DataServiceClient) {
+func StoreRetrieveTest(cl api.DataServiceClient) {
 	ctx := context.Background()
 	in := &api.DataRequest{
 		Data: &api.Data{
