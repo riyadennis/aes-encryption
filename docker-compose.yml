@@ -9,28 +9,24 @@ services:
       - 8086:8086
     restart: on-failure
     depends_on:
-      - mysql-development
+      - mongodb-container
     networks:
       - backend
 
-  mysql-development:
-    image: mysql:8.0.17
+  mongodb-container:
+    image: mongo:latest
     environment:
-      MYSQL_USER: "root"
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: encrypted_db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
     ports:
-      - "3308:3306"
-    networks:
-      - backend
+      - 27017:27017
     volumes:
-      - .data/migrations/1_initialize_schema.up.sql:/docker-entrypoint-initdb.d/setup.sql
-      - named_volume:/var/lib/mysql
+      - mongodb_data_container:/data/db
 
 networks:
   backend:
     driver: bridge
 volumes:
     init: {}
-    named_volume: {}
+    mongodb_data_container: {}
     code_volume: {}
