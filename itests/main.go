@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	cl := ex.NewClient("0.0.0.0:5052")
+	cl := ex.NewClient()
 	StoreRetrieveTest(cl)
 }

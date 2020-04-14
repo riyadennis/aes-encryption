@@ -17,7 +17,7 @@ import (
 
 var store *db.MongoD
 
-// Settings holds the settings need to run the enpoints
+// Settings holds the settings need to run the end points
 type Settings struct {
 	Server   *grpc.Server
 	Listener net.Listener
@@ -25,15 +25,22 @@ type Settings struct {
 }
 
 // NewSettings constructor for generating settings
-func NewSettings(addr string) (*Settings, error) {
-	lis, err := net.Listen("tcp", addr)
+func NewSettings() (*Settings, error) {
+	if os.Getenv("PORT") == "" {
+		logrus.Fatal("unable to detect the port")
+	}
+	lis, err := net.Listen("tcp", "localhost"+os.Getenv("PORT"))
 	if err != nil {
 		return nil, err
+	}
+	if os.Getenv("MONGO_URI") == "" {
+		logrus.Fatal("no mongo host set")
 	}
 	mongoClient, err := mongo.NewClient(
 		options.Client().ApplyURI(os.Getenv("MONGO_URI")),
 	)
 	if err != nil {
+		logrus.Fatalf("unable to connect to mongo :: %v", err)
 		return nil, err
 	}
 	return &Settings{
@@ -44,7 +51,7 @@ func NewSettings(addr string) (*Settings, error) {
 }
 
 func Run(ctx context.Context) {
-	settings, err := NewSettings(os.Getenv("ADDR"))
+	settings, err := NewSettings()
 	if err != nil {
 		logrus.Fatalf("unable to initialise settings :: %v", err)
 	}
