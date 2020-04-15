@@ -1,10 +1,11 @@
 package ex
 
 import (
+	"os"
+
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"os"
 )
 
 func NewClient() api.DataServiceClient {
@@ -13,7 +14,10 @@ func NewClient() api.DataServiceClient {
 	if os.Getenv("PORT") == "" {
 		logrus.Fatal("no port found")
 	}
-	conn, err = grpc.Dial("localhost"+os.Getenv("PORT"), grpc.WithInsecure())
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+	}
+	conn, err = grpc.Dial("127.0.0.1:5300", opts...)
 	if err != nil {
 		logrus.Fatalf("unable to connect :: %v", err)
 	}

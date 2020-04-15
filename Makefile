@@ -9,12 +9,6 @@ run:
 build:
 	go build ./...
 
-migrate:
-	go run main.go -migrate=up
-
-migrate_down:
-	go run main.go -migrate=down
-
 proto:
 	protoc ex/api/data.proto --go_out=plugins=grpc:.
 
@@ -22,7 +16,7 @@ docker-build:
 	docker build -t riyadennis/aes-encryption .
 
 docker-run:
-	docker run --rm -p 8086:8086  riyadennis/aes-encryption
+	docker run --rm -p 8082:8082  riyadennis/aes-encryption
 
 docker-push:
 	docker push riyadennis/aes-encryption:latest

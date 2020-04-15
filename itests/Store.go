@@ -26,7 +26,7 @@ func StoreRetrieveTest(cl api.DataServiceClient) {
 	}
 	resp, err := cl.Store(ctx, in)
 	if err != nil {
-		logrus.Fatal(err)
+		logrus.Fatalf("unable to store :: %v", err)
 	}
 	req := &api.RetrieveRequest{
 		EncryptionId:  resp.EncryptionId,

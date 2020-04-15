@@ -29,7 +29,7 @@ func NewSettings() (*Settings, error) {
 	if os.Getenv("PORT") == "" {
 		logrus.Fatal("unable to detect the port")
 	}
-	lis, err := net.Listen("tcp", "localhost"+os.Getenv("PORT"))
+	lis, err := net.Listen("tcp", os.Getenv("PORT"))
 	if err != nil {
 		return nil, err
 	}

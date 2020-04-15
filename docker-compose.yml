@@ -2,17 +2,17 @@ version: '3'
 
 services:
   aes-encryption:
-    image: riyadennis/aes-encryption:latest
+    build: .
     volumes:
       - code_volume:/aes-encryption
     ports:
-      - 8082:8082
+      - 5300:5300
     restart: on-failure
     depends_on:
       - mongodb-container
     environment:
       MONGO_URI: "mongodb://mongodb:27017"
-      PORT: ":8082"
+      PORT: ":5300"
     networks:
       - backend
 
