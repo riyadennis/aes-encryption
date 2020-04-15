@@ -50,19 +50,25 @@ func NewSettings() (*Settings, error) {
 	}, nil
 }
 
-func Run(ctx context.Context) {
+func Run(ctx context.Context, errChan chan error) {
 	settings, err := NewSettings()
 	if err != nil {
 		logrus.Fatalf("unable to initialise settings :: %v", err)
+		errChan <- err
 	}
 	s := &DataServiceServer{}
 	api.RegisterDataServiceServer(settings.Server, s)
 	go func() {
 		if err := settings.Server.Serve(settings.Listener); err != nil {
+			errChan <- err
 			logrus.Fatalf("unable to run the server :: %v", err)
 		}
 	}()
 	err = settings.DBClient.Connect(ctx)
+	if err != nil {
+		errChan <- err
+		return
+	}
 	store = &db.MongoD{Collection: settings.DBClient.Database(
 		"encrypted-data").Collection("text")}
 	settings.cleanup(ctx)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/riyadennis/aes-encryption/ex/api"
 	"github.com/sirupsen/logrus"
@@ -39,4 +40,5 @@ func StoreRetrieveTest(cl api.DataServiceClient) {
 	if rResp.Data.Message != message {
 		logrus.Fatal("invalid message")
 	}
+	fmt.Printf("read message :  %s", rResp.Data.Message)
 }
